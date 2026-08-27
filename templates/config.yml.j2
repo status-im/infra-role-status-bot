@@ -1,0 +1,42 @@
+---
+#vim: ft=yaml
+
+# Bot Configuration
+bot:
+  init_account: true
+  name: '{{ status_bot_config_username }}'
+  bio: |
+    {{ status_bot_config_bio}}
+  profil_picture_path: 'assets/{{ status_bot_config_profile_picture }}'
+
+# Status Go configurait
+backend:
+  domain: "{{ status_bot_backend_cont_name }}"
+  backend_port: 8080
+  is_secure: false
+
+# API Configuration
+api:
+  enable: {{ status_bot_app_api_enabled | to_json | lower }}
+  host: "{{ status_bot_app_api_host }}"
+  port: {{ status_bot_app_api_port }}
+
+# Database configuration
+database:
+  type: postgres
+
+modules:
+  enabled: {{ status_bot_app_modules_enabled }}
+  settings:
+{% if 'engagement_event' in status_bot_app_modules_enabled %}
+    engagement_event:
+      {{ status_bot_app_modules_settings.engagement_event | to_nice_yaml(indent=2) | trim | indent(6)}}
+{% endif %}
+{% if 'engagement_periodic' in status_bot_app_modules_enabled %}
+    engagement_periodic:
+      {{ status_bot_app_modules_settings.engagement_periodic | to_nice_yaml(indent=2) | trim | indent(6)}}
+{% endif %}
+metrics:
+  enabled: {{ status_bot_app_metrics_enabled | to_json | lower }}
+  host: "{{ status_bot_app_metrics_host }}"
+  port: {{ status_bot_app_metrics_port }}

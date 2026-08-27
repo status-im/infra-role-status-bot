@@ -1,0 +1,15 @@
+---
+galaxy_info:
+  author: Alexis Pentori <alexis@status.im>
+  description: Deploy Status Bot
+  company: Status.im
+  license: MIT
+  min_ansible_version: 2.2
+  platforms:
+    - name: Ubuntu
+      versions:
+        - all
+dependencies:
+    - name: infra-role-consul-service
+      src: git+git@github.com:status-im/infra-role-consul-service.git
+      scm: git

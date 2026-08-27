@@ -1,0 +1,62 @@
+---
+- name: Create directory
+  file:
+    path:     '{{ item }}'
+    state:    directory
+    owner:    '{{ status_bot_user }}'
+    group:    '{{ status_bot_group }}'
+  with_items:
+    - '{{ status_bot_service_path }}'
+    - '{{ status_bot_service_conf }}'
+    - '{{ status_bot_db_data_vol }}'
+    - '{{ status_bot_db_backup_vol }}'
+    - '{{ status_bot_app_cont_vol_backup }}'
+    - '{{ status_bot_app_cont_vol_assets }}'
+    - '{{ status_bot_db_init_vol }}'
+    - '{{ status_bot_backend_cont_vol_data }}'
+
+
+- name: Create compose file
+  template:
+    src:      'docker-compose.yml.j2'
+    dest:     '{{ status_bot_compose_file }}'
+    owner:    '{{ status_bot_user }}'
+    group:    '{{ status_bot_group }}'
+    mode:     0640
+
+
+- name: Create configuration file
+  template:
+    src:      '{{ item.src }}'
+    dest:     '{{ status_bot_service_conf }}/{{ item.dest }}'
+    owner:    '{{ status_bot_user }}'
+    group:    '{{ status_bot_group }}'
+    mode: 0640
+  with_items:
+    - { src: 'db.env.j2',         dest: 'db.env' }
+    - { src: 'bot.env.j2',        dest: 'bot.env' }
+    - { src: 'config.yml.j2',     dest: 'config.yml' }
+
+name: Copy profile picture to the host
+  copy:
+    src:      '{{ status_bot_profile_picture_local_path }}'
+    dest:     '{{ status_bot_app_cont_vol_assets }}/{{ status_bot_config_profile_picture }}'
+    owner:    '{{ status_bot_user }}'
+    group:    '{{ status_bot_group }}'
+    mode:     0660
+
+
+
+- name: Create db init file
+  template:
+    src:      'init-postgres.sql.j2'
+    dest:     '{{ status_bot_db_init_vol }}/init-postgres.sql'
+    owner:    '{{ status_bot_db_uid }}'
+    group:    '{{ status_bot_group }}'
+    mode: 0640
+
+- name: Create containers
+  community.docker.docker_compose_v2:
+    project_src:    '{{ status_bot_service_path }}'
+    state:          '{{ compose_state }}'
+    recreate:       '{{ compose_recreate }}'

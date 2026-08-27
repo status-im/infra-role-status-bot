@@ -1,0 +1,9 @@
+ALTER SYSTEM SET wal_level = logical; 
+-- Init sql script for the database
+CREATE ROLE {{ status_bot_db_repl_user }} WITH REPLICATION LOGIN PASSWORD '{{ status_bot_db_repl_pass }}';
+
+CREATE SCHEMA status_app_monitoring;
+
+CREATE PUBLICATION pub_repl_status_bot FOR TABLES IN SCHEMA status_app_monitoring;
+GRANT ALL ON ALL TABLES in status_app_monitoring to {{ status_bot_db_repl_user }};
+GRANT ALL ON SCHEMA status_app_monitoring to {{ status_bot_db_repl_user }};

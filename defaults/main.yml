@@ -1,0 +1,104 @@
+---
+# Service definition
+status_bot_service_name:             'status-bot'
+status_bot_service_path:             '/docker/{{ status_bot_service_name }}'
+status_bot_service_conf:             '{{ status_bot_service_path }}/config'
+status_bot_compose_file:             '{{ status_bot_service_path }}/docker-compose.yml'
+
+status_bot_user:                     'dockremap'
+status_bot_group:                    'docker'
+
+status_bot_profile_picture_local_path: 'default.png'
+
+# Containers definition
+status_bot_app_cont_name:            '{{ status_bot_service_name }}-app'
+status_bot_app_cont_tag:             'master'
+status_bot_app_cont_image:           'harbor.status.im/bi/status-bot'
+status_bot_app_cont_port:            8000
+status_bot_app_cont_vol_backup:      '{{ status_bot_service_path }}/account-backups'
+status_bot_app_cont_vol_assets:      '{{ status_bot_service_path }}/assets'
+## Bot configuration
+status_bot_config_username:           'status-bot'
+status_bot_config_bio:                'An instance of Status Bot'
+status_bot_config_profile_picture:    'profile.png'
+status_bot_config_password:           #ChangeMeIfYouCare
+status_bot_config_passphrase:         #'test test test test test test test test test test test''
+status_bot_config_coingecko_api_key:  ~
+status_bot_config_infura_key:         ~
+status_bot_config_compressed_key:     ~
+status_bot_config_hash_pepper:        ~
+
+### Modules config
+# Modules config
+status_bot_app_modules_enabled:       []
+# - 'messaging'
+# - 'receiver'
+# - 'community_monitoring'
+# - 'engagement
+status_bot_app_modules_settings:      {}
+#  engagement_event:                  {}
+#  engagement_periodic:               {}
+#  receiver:                          {}
+#  communities_monitoring:            {}
+#  messaging:                         {}
+
+# API
+status_bot_app_api_enabled:           True
+status_bot_app_cont_port_api:         8081
+status_bot_app_api_host:              "0.0.0.0"
+status_bot_app_api_key:              #key for API endpoints
+
+# Metrics
+status_bot_app_metrics_enabled:       True
+status_bot_app_cont_port_metrics:          8000
+status_bot_app_metrics_host:          "0.0.0.0"
+
+
+# Status Backend
+status_bot_backend_cont_name:        '{{ status_bot_service_name }}-backend'
+status_bot_backend_cont_image:       'harbor.status.im/status-im/status-go'
+status_bot_backend_cont_tag:         'latest'
+status_bot_backend_cont_port_http:   8080
+status_bot_backend_cont_port_rpc:    8545
+status_bot_backend_cont_port_p2p:    30303
+status_bot_backend_cont_port_media:  9000
+status_bot_backend_cont_vol_data:    '{{ status_bot_service_path }}/backend-data'
+
+status_bot_backend_backup_service_name: 'dump-status_bot-db'
+status_bot_backend_backup_frequency:    'daily'
+status_bot_backend_backup_timeout:      120
+status_bot_backend_backup_user:         'root'
+
+
+# Database
+status_bot_db_cont_name:             '{{ status_bot_service_name }}-db'
+status_bot_db_cont_tag:              15
+status_bot_db_cont_image:            'postgres:{{ status_bot_db_cont_tag }}'
+status_bot_db_cont_port:             5432
+status_bot_db_cont_uid:              999
+status_bot_db_host_uid:              '{{ 100000 + status_bot_db_cont_uid | int }}'
+status_bot_db_data_vol:              '{{ status_bot_service_path }}/db'
+status_bot_db_init_vol:              '{{ status_bot_service_path }}/init'
+#status_bot_db_admin_pass:           'ChangeMeIfYouCare'
+#status_bot_db_admin_user:           'admin'
+status_bot_db_name:                  'status_bot'
+status_bot_db_schema:                'public'
+status_bot_db_uid:                   999
+# Replication user
+status_bot_db_repl_user:             'repl'
+status_bot_db_repl_pass:             ~
+
+## Backups
+status_bot_backup_vol:              '{{ status_bot_service_path }}/backup'
+status_bot_db_backup_service_name:   'dump-status_bot-db'
+status_bot_db_backup_frequency:      'daily'
+status_bot_db_backup_timeout:        120
+status_bot_db_backup_user:           'root'
+
+status_bot_consul_tags:
+- 'status-app'
+- 'monitoring'
+- 'bot'
+
+compose_recreate: 'auto'
+compose_state: 'present'

@@ -1,0 +1,51 @@
+---
+- name:         Create Consul service definition
+  include_role: name=infra-role-consul-service
+  vars:
+    consul_config_name: '{{ status_bot_service_name }}'
+    consul_services:
+      - name:     '{{ status_bot_service_name }}'
+        id:       '{{ status_bot_service_name }}:{{ status_bot_app_cont_name }}-{{ stage }}'
+        tags:     '{{ status_bot_consul_tags }}'
+        port:     '{{ status_bot_app_cont_port_api }}'
+        address:  '{{ ansible_local.wireguard.address }}'
+        checks:
+          - id: '{{ status_bot_app_cont_name }}-status'
+            name: 'status Bot'
+            type: 'http'
+            http: 'http://localhost:{{ status_bot_app_cont_port_api }}/health'
+
+      - name:     '{{ status_bot_service_name }}'
+        id:       '{{ status_bot_service_name }}:{{ status_bot_app_cont_name }}-{{ metrics }}-{{ stage }}'
+        tags:     '{{ status_bot_consul_tags }}'
+        port:     '{{ status_bot_app_cont_port_metrics }}'
+        address:  '{{ ansible_local.wireguard.address }}'
+        checks:
+          - id: '{{ status_bot_app_cont_name }}-metrics-status'
+            name: 'status Bot Metrics'
+            type: 'http'
+            http: 'http://localhost:{{ status_bot_app_cont_port_metrics }}/metrics'
+
+      - name:     '{{ status_bot_service_name }}'
+        id:       '{{ status_bot_service_name }}:{{ status_bot_backend_cont_name }}-{{ stage }}'
+        tags:     '{{ status_bot_consul_tags }}'
+        port:     '{{ status_bot_backend_cont_port_http }}'
+        address:  '{{ ansible_local.wireguard.address }}'
+        checks:
+          - id: '{{ status_bot_backend_cont_name }}-status'
+            name: 'status backend'
+            type: 'http'
+            http: 'http://localhost:{{ status_bot_backend_cont_port_http }}/health'
+
+      - name: '{{ status_bot_service_name }}'
+        id: '{{ status_bot_service_name }}:{{ status_bot_db_cont_name }}-{{ stage }}'
+        tags: '{{ status_bot_consul_tags }}'
+        port: '{{ status_bot_db_cont_port }}'
+        meta:
+          container: '{{ status_bot_db_cont_name }}'
+        checks:
+          - id:   '{{ status_bot_db_cont_name }}-status'
+            name: 'PostgreSQL DB Healthcheck'
+            type: 'tcp'
+            tcp:  'localhost:{{ status_bot_db_cont_port }}'
+

@@ -1,0 +1,6 @@
+- import_tasks: container.yml
+  tags: ['role:status-bot', 'role::status-bot:container']
+- import_tasks: backup.yml
+  tags: ['role:status-bot', 'role::status-bot:backup']
+- import_tasks: consul.yml
+  tags: ['role::status-bot', 'role::status-bot:consul']

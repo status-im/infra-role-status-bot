@@ -1,0 +1,65 @@
+---
+# vim: ft=yaml
+services:
+  backend:
+    container_name: "{{ status_bot_backend_cont_name }}"
+    build:
+      # temporal until stable status go version released
+      context: https://github.com/status-im/status-go.git#16f1e129efa41491e961a59027d1a2f88fe02a97
+    ports:
+      - "{{ status_bot_backend_cont_port_http }}:{{ status_bot_backend_cont_port_http }}"
+      - "{{ status_bot_backend_cont_port_rpc }}:{{ status_bot_backend_cont_port_rpc }}"
+      - "{{ status_bot_backend_cont_port_p2p }}:{{ status_bot_backend_cont_port_p2p }}"
+      - "{{ status_bot_backend_cont_port_media }}:{{ status_bot_backend_cont_port_media }}"
+    entrypoint: "status-backend"
+    command: "-address 0.0.0.0:{{ status_bot_backend_cont_port_http }}"
+    environment:
+      STATUS_GO_MEDIA_SERVER_PORT: "{{ status_bot_backend_cont_port_media }}"
+      STATUS_GO_MEDIA_SERVER_HOST: "0.0.0.0"
+    volumes:
+      - "{{ status_bot_app_cont_vol_backup }}:/root/.config/Status/backups"
+      - "{{ status_bot_backend_cont_vol_data }}:/data"
+      - "{{ status_bot_app_cont_vol_assets }}:/assets"
+    healthcheck:
+        test: ["CMD", "curl http://0.0.0.0:8080/health"]
+
+  bot:
+    container_name: "{{ status_bot_app_cont_name }}"
+    image: "{{ status_bot_app_cont_image }}:{{ status_bot_app_cont_tag }}"
+    env_file:
+      - ./config/bot.env
+    ports:
+      - "{{ status_bot_app_cont_port_api }}:{{ status_bot_app_cont_port_api }}"
+      - "{{ status_bot_app_cont_port_metrics }}:{{ status_bot_app_cont_port_metrics }}"
+    volumes:
+      - "{{ status_bot_service_conf }}/config.yml:/app/config.yaml"
+      - "{{ status_bot_app_cont_vol_backup }}:/backups"
+      - "{{ status_bot_app_cont_vol_assets }}:/app/assets"
+    depends_on:
+      - backend
+      - database
+    healthcheck:
+      test: ["CMD", "curl http://{{ status_bot_app_api_host }}:{{ status_bot_app_api_port }}/health"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+
+  database:
+    image: "{{ status_bot_db_cont_image }}"
+    container_name: "{{ status_bot_db_cont_name }}"
+    restart: "unless-stopped"
+    ports:
+      - "{{ status_bot_db_cont_port }}:{{ status_bot_db_cont_port }}"
+    volumes:
+      - {{ status_bot_db_data_vol }}:/var/lib/postgresql/data
+      - {{ status_bot_db_backup_vol }}:/backup
+      - {{ status_bot_db_init_vol }}:/docker-entrypoint-initdb.d
+    command: |
+      -p {{ status_bot_db_cont_port }}
+    env_file:
+      - ./config/db.env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready --username {{ status_bot_db_admin_user | mandatory }} --dbname {{ status_bot_db_name }}"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
