@@ -40,3 +40,8 @@ metrics:
   enabled: {{ status_bot_app_metrics_enabled | to_json | lower }}
   host: "{{ status_bot_app_metrics_host }}"
   port: {{ status_bot_app_metrics_port }}
+
+logging:
+  format: json
+  level: "{{ status_bot_app_config_log_level }}"
+  uvicorn_access: false

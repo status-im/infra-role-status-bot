@@ -27,6 +27,7 @@ status_bot_config_coingecko_api_key:  ~
 status_bot_config_infura_key:         ~
 status_bot_config_compressed_key:     ~
 status_bot_config_hash_pepper:        ~
+status_bot_app_config_log_level:      'info'
 
 ### Modules config
 # Modules config
@@ -50,7 +51,7 @@ status_bot_app_api_key:              #key for API endpoints
 
 # Metrics
 status_bot_app_metrics_enabled:       True
-status_bot_app_cont_port_metrics:          8000
+status_bot_app_cont_port_metrics:     8000
 status_bot_app_metrics_host:          "0.0.0.0"
 
 
