@@ -29,12 +29,12 @@ The deployement will setup 3 containers:
 
 ```yml
 # Account configuration
-status_bot_app_username:            'botty-mac-bot'
-status_bot_app_password:            'ChangeMeIfYouCare'
-status_bot_app_passphrase:          'test test test test test test test test test test test'
-status_bot_app_compressed_key:      'account-compressed-key'
-status_bot_app_coingecko_api_key:   'some-api-key'
-status_bot_app_infura_key:          'some-api-key'
+status_bot_config_username:            'botty-mac-bot'
+status_bot_config_password:            'ChangeMeIfYouCare'
+status_bot_config_passphrase:          'test test test test test test test test test test test'
+status_bot_config_compressed_key:      'account-compressed-key'
+status_bot_config_coingecko_api_key:   'some-api-key'
+status_bot_config_infura_key:          'some-api-key'
 status_bot_config_hash_pepper:      'Pepper used for data hashing'
 
 # Database configuration

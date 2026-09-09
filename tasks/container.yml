@@ -9,7 +9,7 @@
     - '{{ status_bot_service_path }}'
     - '{{ status_bot_service_conf }}'
     - '{{ status_bot_db_data_vol }}'
-    - '{{ status_bot_db_backup_vol }}'
+    - '{{ status_bot_backup_vol }}'
     - '{{ status_bot_app_cont_vol_backup }}'
     - '{{ status_bot_app_cont_vol_assets }}'
     - '{{ status_bot_db_init_vol }}'
@@ -37,15 +37,13 @@
     - { src: 'bot.env.j2',        dest: 'bot.env' }
     - { src: 'config.yml.j2',     dest: 'config.yml' }
 
-name: Copy profile picture to the host
+- name: Copy profile picture to the host
   copy:
     src:      '{{ status_bot_profile_picture_local_path }}'
     dest:     '{{ status_bot_app_cont_vol_assets }}/{{ status_bot_config_profile_picture }}'
     owner:    '{{ status_bot_user }}'
     group:    '{{ status_bot_group }}'
     mode:     0660
-
-
 
 - name: Create db init file
   template:

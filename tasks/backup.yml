@@ -11,7 +11,7 @@
     systemd_timer_start_on_creation: false
     systemd_timer_script_content: |
       #!/usr/bin/env bash
-      BKP_DIR="{{ status_bot_db_backup_vol }}/{{ status_bot_db_name }}"
+      BKP_DIR="{{ status_bot_backup_vol }}/{{ status_bot_db_name }}"
       rm -vfr "${BKP_DIR}"
       /usr/bin/docker exec -i -e PGPORT={{ status_bot_db_cont_port }} {{ status_bot_db_cont_name }} \
         pg_dump -F directory -f "/backup/{{ status_bot_db_name }}" -U {{ status_bot_db_admin_user }} {{ status_bot_db_name }}

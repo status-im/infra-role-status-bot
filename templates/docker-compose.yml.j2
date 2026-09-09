@@ -39,7 +39,7 @@ services:
       - backend
       - database
     healthcheck:
-      test: ["CMD", "curl http://{{ status_bot_app_api_host }}:{{ status_bot_app_api_port }}/health"]
+      test: ["CMD", "curl http://{{ status_bot_app_api_host }}:{{  status_bot_app_cont_port_api }}/health"]
       interval: 60s
       timeout: 10s
       retries: 3
@@ -52,7 +52,7 @@ services:
       - "{{ status_bot_db_cont_port }}:{{ status_bot_db_cont_port }}"
     volumes:
       - {{ status_bot_db_data_vol }}:/var/lib/postgresql/data
-      - {{ status_bot_db_backup_vol }}:/backup
+      - {{ status_bot_backup_vol }}:/backup
       - {{ status_bot_db_init_vol }}:/docker-entrypoint-initdb.d
     command: |
       -p {{ status_bot_db_cont_port }}
