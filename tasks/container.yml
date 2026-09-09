@@ -14,7 +14,8 @@
     - '{{ status_bot_app_cont_vol_assets }}'
     - '{{ status_bot_db_init_vol }}'
     - '{{ status_bot_backend_cont_vol_data }}'
-
+    - '{{ status_bot_app_cont_vol_bot_images }}'
+    - '{{ status_bot_backend_cont_vol_images }}'
 
 - name: Create compose file
   template:

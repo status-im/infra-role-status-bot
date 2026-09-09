@@ -17,6 +17,8 @@ status_bot_app_cont_image:           'harbor.status.im/bi/status-bot'
 status_bot_app_cont_port:            8000
 status_bot_app_cont_vol_backup:      '{{ status_bot_service_path }}/account-backups'
 status_bot_app_cont_vol_assets:      '{{ status_bot_service_path }}/assets'
+# This directory is only initialized here
+status_bot_app_cont_vol_bot_images:      '{{ status_bot_service_path }}/assets/bot-images'
 ## Bot configuration
 status_bot_config_username:           'status-bot'
 status_bot_config_bio:                'An instance of Status Bot'
@@ -64,6 +66,8 @@ status_bot_backend_cont_port_rpc:    8545
 status_bot_backend_cont_port_p2p:    30303
 status_bot_backend_cont_port_media:  9000
 status_bot_backend_cont_vol_data:    '{{ status_bot_service_path }}/backend-data'
+# This drectory is only initialized here
+status_bot_backend_cont_vol_images:      '{{ status_bot_service_path }}/assets/images'
 
 status_bot_backend_backup_service_name: 'dump-status_bot-db'
 status_bot_backend_backup_frequency:    'daily'

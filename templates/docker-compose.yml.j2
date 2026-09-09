@@ -3,9 +3,7 @@
 services:
   backend:
     container_name: "{{ status_bot_backend_cont_name }}"
-    build:
-      # temporal until stable status go version released
-      context: https://github.com/status-im/status-go.git#16f1e129efa41491e961a59027d1a2f88fe02a97
+    image: "{{ status_bot_backend_cont_image }}:{{ status_bot_backend_cont_tag }}"
     ports:
       - "{{ status_bot_backend_cont_port_http }}:{{ status_bot_backend_cont_port_http }}"
       - "{{ status_bot_backend_cont_port_rpc }}:{{ status_bot_backend_cont_port_rpc }}"
