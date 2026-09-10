@@ -53,6 +53,7 @@
     owner:    '{{ status_bot_db_uid }}'
     group:    '{{ status_bot_group }}'
     mode: 0640
+  when: status_bot_db_init_script|bool
 
 - name: Create containers
   community.docker.docker_compose_v2:

@@ -15,7 +15,7 @@
             type: 'http'
             http: 'http://localhost:{{ status_bot_app_cont_port_api }}/health'
 
-      - name:     '{{ status_bot_service_name }}'
+      - name:     '{{ status_bot_service_name }}-metrics'
         id:       '{{ status_bot_service_name }}:{{ status_bot_app_cont_name }}-metrics'
         tags:     '{{ status_bot_consul_tags }}'
         port:     '{{ status_bot_app_cont_port_metrics }}'

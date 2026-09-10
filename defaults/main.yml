@@ -12,7 +12,7 @@ status_bot_profile_picture_local_path: 'default.png'
 
 # Containers definition
 status_bot_app_cont_name:            '{{ status_bot_service_name }}-app'
-status_bot_app_cont_tag:             'master'
+status_bot_app_cont_tag:             '1.0.0'
 status_bot_app_cont_image:           'harbor.status.im/bi/status-bot'
 status_bot_app_cont_port:            8000
 status_bot_app_cont_vol_backup:      '{{ status_bot_service_path }}/account-backups'
@@ -60,7 +60,7 @@ status_bot_app_metrics_host:          "0.0.0.0"
 # Status Backend
 status_bot_backend_cont_name:        '{{ status_bot_service_name }}-backend'
 status_bot_backend_cont_image:       'harbor.status.im/status-im/status-go'
-status_bot_backend_cont_tag:         'latest'
+status_bot_backend_cont_tag:         'status-bot-1.0.0'
 status_bot_backend_cont_port_http:   8080
 status_bot_backend_cont_port_rpc:    8545
 status_bot_backend_cont_port_p2p:    30303
@@ -90,8 +90,9 @@ status_bot_db_name:                  'status_bot'
 status_bot_db_schema:                'public'
 status_bot_db_uid:                   999
 # Replication user
-status_bot_db_repl_user:             'repl'
-status_bot_db_repl_pass:             ~
+status_bot_db_init_script:           False
+#status_bot_db_repl_user:             'repl'
+#status_bot_db_repl_pass:             ~
 
 ## Backups
 status_bot_backup_vol:              '{{ status_bot_service_path }}/backup'
